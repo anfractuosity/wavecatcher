@@ -1,0 +1,290 @@
+EESchema Schematic File Version 4
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MCU_ST_STM32:STM32F302RBTx U?
+U 1 1 5AB69AD4
+P 6400 3900
+F 0 "U?" H 6400 1814 50  0000 C CNN
+F 1 "STM32F302RBTx" H 6400 1723 50  0000 C CNN
+F 2 "LQFP64" H 10500 5775 50  0001 R TNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00094064.pdf" H 6400 3900 50  0001 C CNN
+	1    6400 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Crystal Y?
+U 1 1 5AB766C9
+P 1100 3350
+F 0 "Y?" H 1100 3082 50  0000 C CNN
+F 1 "Crystal" H 1100 3173 50  0000 C CNN
+F 2 "" H 1100 3350 50  0001 C CNN
+F 3 "~" H 1100 3350 50  0001 C CNN
+	1    1100 3350
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5AB76F90
+P 700 3550
+F 0 "C?" H 815 3596 50  0000 L CNN
+F 1 "C" H 815 3505 50  0000 L CNN
+F 2 "" H 738 3400 50  0001 C CNN
+F 3 "~" H 700 3550 50  0001 C CNN
+	1    700  3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5AB77069
+P 1500 3550
+F 0 "C?" H 1615 3596 50  0000 L CNN
+F 1 "C" H 1615 3505 50  0000 L CNN
+F 2 "" H 1538 3400 50  0001 C CNN
+F 3 "~" H 1500 3550 50  0001 C CNN
+	1    1500 3550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	700  3400 700  3350
+Wire Wire Line
+	700  3350 950  3350
+Wire Wire Line
+	1250 3350 1500 3350
+Wire Wire Line
+	1500 3350 1500 3400
+$Comp
+L power:GND #PWR?
+U 1 1 5AB77347
+P 700 3800
+F 0 "#PWR?" H 700 3550 50  0001 C CNN
+F 1 "GND" H 705 3627 50  0000 C CNN
+F 2 "" H 700 3800 50  0001 C CNN
+F 3 "" H 700 3800 50  0001 C CNN
+	1    700  3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5AB773A2
+P 1500 3800
+F 0 "#PWR?" H 1500 3550 50  0001 C CNN
+F 1 "GND" H 1505 3627 50  0000 C CNN
+F 2 "" H 1500 3800 50  0001 C CNN
+F 3 "" H 1500 3800 50  0001 C CNN
+	1    1500 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	700  3700 700  3800
+Wire Wire Line
+	1500 3700 1500 3800
+$Comp
+L Device:R R?
+U 1 1 5AB7760A
+P 1500 3150
+F 0 "R?" H 1570 3196 50  0000 L CNN
+F 1 "R" H 1570 3105 50  0000 L CNN
+F 2 "" V 1430 3150 50  0001 C CNN
+F 3 "~" H 1500 3150 50  0001 C CNN
+	1    1500 3150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1500 3300 1500 3350
+Connection ~ 1500 3350
+Wire Wire Line
+	1500 3000 1900 3000
+Wire Wire Line
+	1900 3000 1900 3500
+Wire Wire Line
+	1900 3500 2200 3500
+Wire Wire Line
+	2200 3400 2000 3400
+Wire Wire Line
+	2000 3400 2000 2900
+Wire Wire Line
+	2000 2900 700  2900
+Wire Wire Line
+	700  2900 700  3350
+Connection ~ 700  3350
+$Comp
+L Device:Crystal Y?
+U 1 1 5AB77B7E
+P 1000 5350
+F 0 "Y?" H 1000 5082 50  0000 C CNN
+F 1 "Crystal" H 1000 5173 50  0000 C CNN
+F 2 "" H 1000 5350 50  0001 C CNN
+F 3 "~" H 1000 5350 50  0001 C CNN
+	1    1000 5350
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5AB77B85
+P 600 5550
+F 0 "C?" H 715 5596 50  0000 L CNN
+F 1 "C" H 715 5505 50  0000 L CNN
+F 2 "" H 638 5400 50  0001 C CNN
+F 3 "~" H 600 5550 50  0001 C CNN
+	1    600  5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5AB77B8C
+P 1400 5550
+F 0 "C?" H 1515 5596 50  0000 L CNN
+F 1 "C" H 1515 5505 50  0000 L CNN
+F 2 "" H 1438 5400 50  0001 C CNN
+F 3 "~" H 1400 5550 50  0001 C CNN
+	1    1400 5550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	600  5400 600  5350
+Wire Wire Line
+	600  5350 850  5350
+Wire Wire Line
+	1150 5350 1400 5350
+Wire Wire Line
+	1400 5350 1400 5400
+$Comp
+L power:GND #PWR?
+U 1 1 5AB77B97
+P 600 5800
+F 0 "#PWR?" H 600 5550 50  0001 C CNN
+F 1 "GND" H 605 5627 50  0000 C CNN
+F 2 "" H 600 5800 50  0001 C CNN
+F 3 "" H 600 5800 50  0001 C CNN
+	1    600  5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5AB77B9D
+P 1400 5800
+F 0 "#PWR?" H 1400 5550 50  0001 C CNN
+F 1 "GND" H 1405 5627 50  0000 C CNN
+F 2 "" H 1400 5800 50  0001 C CNN
+F 3 "" H 1400 5800 50  0001 C CNN
+	1    1400 5800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	600  5700 600  5800
+Wire Wire Line
+	1400 5700 1400 5800
+$Comp
+L Device:R R?
+U 1 1 5AB77BA5
+P 1400 5150
+F 0 "R?" H 1470 5196 50  0000 L CNN
+F 1 "R" H 1470 5105 50  0000 L CNN
+F 2 "" V 1330 5150 50  0001 C CNN
+F 3 "~" H 1400 5150 50  0001 C CNN
+	1    1400 5150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1400 5300 1400 5350
+Connection ~ 1400 5350
+Wire Wire Line
+	1400 5000 1800 5000
+Wire Wire Line
+	1800 5000 1800 5500
+Wire Wire Line
+	1900 5400 1900 4900
+Wire Wire Line
+	1900 4900 600  4900
+Wire Wire Line
+	600  4900 600  5350
+Connection ~ 600  5350
+Wire Wire Line
+	1900 5400 2200 5400
+Wire Wire Line
+	1800 5500 2200 5500
+$Comp
+L Switch:SW_MEC_5G SW?
+U 1 1 5AB79237
+P 1250 2250
+F 0 "SW?" H 1250 2535 50  0000 C CNN
+F 1 "SW_MEC_5G" H 1250 2444 50  0000 C CNN
+F 2 "" H 1250 2450 50  0001 C CNN
+F 3 "http://www.apem.com/int/index.php?controller=attachment&id_attachment=488" H 1250 2450 50  0001 C CNN
+	1    1250 2250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1450 2250 1550 2250
+Wire Wire Line
+	2200 2250 2200 2300
+$Comp
+L Device:C C?
+U 1 1 5AB79B99
+P 1250 2500
+F 0 "C?" V 998 2500 50  0000 C CNN
+F 1 "C" V 1089 2500 50  0000 C CNN
+F 2 "" H 1288 2350 50  0001 C CNN
+F 3 "~" H 1250 2500 50  0001 C CNN
+	1    1250 2500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1400 2500 1550 2500
+Wire Wire Line
+	1550 2500 1550 2250
+Connection ~ 1550 2250
+Wire Wire Line
+	1550 2250 2200 2250
+Wire Wire Line
+	1100 2500 1050 2500
+Wire Wire Line
+	1050 2500 1050 2350
+$Comp
+L power:GND #PWR?
+U 1 1 5AB7A9B1
+P 850 2450
+F 0 "#PWR?" H 850 2200 50  0001 C CNN
+F 1 "GND" H 855 2277 50  0000 C CNN
+F 2 "" H 850 2450 50  0001 C CNN
+F 3 "" H 850 2450 50  0001 C CNN
+	1    850  2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	850  2450 850  2350
+Wire Wire Line
+	850  2350 1050 2350
+Connection ~ 1050 2350
+Wire Wire Line
+	1050 2350 1050 2250
+$Comp
+L SPH0641LU4H-1:SPH0641LU4H-1 MK?
+U 1 1 5AB7969E
+P 2000 1150
+F 0 "MK?" H 2000 1517 50  0000 C CNN
+F 1 "SPH0641LU4H-1" H 2000 1426 50  0000 C CNN
+F 2 "MIC_SPH0641LU4H-1" H 2000 1150 50  0001 L BNN
+F 3 "MAPBGA-400 NXP Semiconductors" H 2000 1150 50  0001 L BNN
+F 4 "Good" H 2000 1150 50  0001 L BNN "Field4"
+F 5 "SPH0641LU4H-1" H 2000 1150 50  0001 L BNN "Field5"
+F 6 "Mic Mems Digital Pdm Omni -26db" H 2000 1150 50  0001 L BNN "Field6"
+F 7 "Knowles" H 2000 1150 50  0001 L BNN "Field7"
+F 8 "1.88 USD" H 2000 1150 50  0001 L BNN "Field8"
+	1    2000 1150
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
