@@ -1,0 +1,31 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# LP38693MP-3.3
+#
+DEF LP38693MP-3.3 U 0 40 Y Y 1 L N
+F0 "U" -224 459 50 H V L BNN
+F1 "LP38693MP-3.3" -187 -705 50 H V L BNN
+F2 "SOT150P696X180-5N" 0 0 50 H I L BNN
+F3 "LP38693MP-3.3/NOPB" 0 0 50 H I L BNN
+F4 "SOT-223 Texas Instruments" 0 0 50 H I L BNN
+F5 "500mA Low Dropout CMOS Linear Regulators Stable with Ceramic Output Capacitors 5-SOT-223 -40 to 125" 0 0 50 H I L BNN
+F6 "Texas Instruments" 0 0 50 H I L BNN
+F7 "0.93 USD" 0 0 50 H I L BNN
+F8 "Good" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 16 -500 400 -500 -600 N
+P 2 0 0 16 -500 -600 500 -600 N
+P 2 0 0 16 500 -600 500 400 N
+P 2 0 0 16 500 400 -500 400 N
+X VIN 4 -700 200 200 R 40 40 0 0 W 
+X VEN 1 -700 0 200 R 40 40 0 0 I 
+X NC 2 -700 -200 200 R 40 40 0 0 N 
+X GND 5 -700 -400 200 R 40 40 0 0 P 
+X VOUT 3 700 200 200 L 40 40 0 0 O 
+ENDDRAW
+ENDDEF
+#
+# End Library

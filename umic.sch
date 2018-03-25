@@ -1,7 +1,8 @@
 EESchema Schematic File Version 4
+LIBS:umic-cache
 EELAYER 26 0
 EELAYER END
-$Descr A4 11693 8268
+$Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title ""
@@ -287,4 +288,236 @@ F 8 "1.88 USD" H 2000 1150 50  0001 L BNN "Field8"
 	1    2000 1150
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector_Specialized:USB_B_Micro J?
+U 1 1 5AB7D343
+P 5500 1150
+F 0 "J?" H 5555 1617 50  0000 C CNN
+F 1 "USB_B_Micro" H 5555 1526 50  0000 C CNN
+F 2 "" H 5650 1100 50  0001 C CNN
+F 3 "~" H 5650 1100 50  0001 C CNN
+	1    5500 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 1550 5450 1550
+$Comp
+L Device:R R?
+U 1 1 5AB7DE24
+P 6400 1250
+F 0 "R?" V 6193 1250 50  0000 C CNN
+F 1 "22" V 6284 1250 50  0000 C CNN
+F 2 "" V 6330 1250 50  0001 C CNN
+F 3 "~" H 6400 1250 50  0001 C CNN
+	1    6400 1250
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5AB7DE9F
+P 6750 1350
+F 0 "R?" V 6543 1350 50  0000 C CNN
+F 1 "100k" V 6634 1350 50  0000 C CNN
+F 2 "" V 6680 1350 50  0001 C CNN
+F 3 "~" H 6750 1350 50  0001 C CNN
+	1    6750 1350
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5800 1250 6250 1250
+Wire Wire Line
+	5800 1350 6600 1350
+Wire Wire Line
+	11150 1150 11150 3500
+Wire Wire Line
+	11150 3500 10600 3500
+Wire Wire Line
+	6550 1250 11050 1250
+Wire Wire Line
+	11050 1250 11050 3400
+Wire Wire Line
+	11050 3400 10600 3400
+$Comp
+L power:GND #PWR?
+U 1 1 5AB81005
+P 6000 1600
+F 0 "#PWR?" H 6000 1350 50  0001 C CNN
+F 1 "GND" H 6005 1427 50  0000 C CNN
+F 2 "" H 6000 1600 50  0001 C CNN
+F 3 "" H 6000 1600 50  0001 C CNN
+	1    6000 1600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 1550 5450 1650
+Wire Wire Line
+	5450 1650 5850 1650
+Wire Wire Line
+	5850 1650 5850 1450
+Wire Wire Line
+	5850 1450 6000 1450
+Wire Wire Line
+	7000 1450 7000 1350
+Wire Wire Line
+	7000 1350 6900 1350
+Connection ~ 5450 1550
+Wire Wire Line
+	5450 1550 5500 1550
+Wire Wire Line
+	6000 1450 6000 1600
+Connection ~ 6000 1450
+Wire Wire Line
+	6000 1450 7000 1450
+$Comp
+L Device:R R?
+U 1 1 5AB827FD
+P 5900 950
+F 0 "R?" H 5970 996 50  0000 L CNN
+F 1 "1k5" H 5970 905 50  0000 L CNN
+F 2 "" V 5830 950 50  0001 C CNN
+F 3 "~" H 5900 950 50  0001 C CNN
+	1    5900 950 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5800 1150 5900 1150
+Wire Wire Line
+	5900 1150 5900 1100
+Connection ~ 5900 1150
+$Comp
+L Device:R R?
+U 1 1 5AB85D7A
+P 6200 1150
+F 0 "R?" V 5993 1150 50  0000 C CNN
+F 1 "22" V 6084 1150 50  0000 C CNN
+F 2 "" V 6130 1150 50  0001 C CNN
+F 3 "~" H 6200 1150 50  0001 C CNN
+	1    6200 1150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5900 1150 6050 1150
+Wire Wire Line
+	6350 1150 11150 1150
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5AB8799A
+P 5900 700
+F 0 "#PWR?" H 5900 550 50  0001 C CNN
+F 1 "+3.3V" H 5915 873 50  0000 C CNN
+F 2 "" H 5900 700 50  0001 C CNN
+F 3 "" H 5900 700 50  0001 C CNN
+	1    5900 700 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 800  5900 700 
+$Comp
+L LP38693MP-3.3:LP38693MP-3.3 U?
+U 1 1 5AB94019
+P 4400 7250
+F 0 "U?" H 4400 7820 50  0000 C CNN
+F 1 "LP38693MP-3.3" H 4400 7729 50  0000 C CNN
+F 2 "SOT150P696X180-5N" H 4400 7250 50  0001 L BNN
+F 3 "LP38693MP-3.3/NOPB" H 4400 7250 50  0001 L BNN
+F 4 "SOT-223 Texas Instruments" H 4400 7250 50  0001 L BNN "Field4"
+F 5 "500mA Low Dropout CMOS Linear Regulators Stable with Ceramic Output Capacitors 5-SOT-223 -40 to 125" H 4400 7250 50  0001 L BNN "Field5"
+F 6 "Texas Instruments" H 4400 7250 50  0001 L BNN "Field6"
+F 7 "0.93 USD" H 4400 7250 50  0001 L BNN "Field7"
+F 8 "Good" H 4400 7250 50  0001 L BNN "Field8"
+	1    4400 7250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 7250 3550 7250
+Wire Wire Line
+	3550 7250 3550 7050
+Wire Wire Line
+	3550 7050 3700 7050
+$Comp
+L Device:C C?
+U 1 1 5AB959D2
+P 5200 7350
+F 0 "C?" H 5315 7396 50  0000 L CNN
+F 1 "1uF" H 5315 7305 50  0000 L CNN
+F 2 "" H 5238 7200 50  0001 C CNN
+F 3 "~" H 5200 7350 50  0001 C CNN
+	1    5200 7350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5AB95A5F
+P 3250 7500
+F 0 "C?" H 3365 7546 50  0000 L CNN
+F 1 "1uF" H 3365 7455 50  0000 L CNN
+F 2 "" H 3288 7350 50  0001 C CNN
+F 3 "~" H 3250 7500 50  0001 C CNN
+	1    3250 7500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 7250 3250 7250
+Wire Wire Line
+	3250 7250 3250 7350
+Connection ~ 3550 7250
+Wire Wire Line
+	3550 7650 3550 7950
+Wire Wire Line
+	3550 7950 4350 7950
+Wire Wire Line
+	5200 7950 5200 7500
+Wire Wire Line
+	3250 7650 3550 7650
+Connection ~ 3550 7650
+Wire Wire Line
+	3550 7650 3700 7650
+Wire Wire Line
+	5200 7200 5200 7050
+Wire Wire Line
+	5200 7050 5100 7050
+$Comp
+L power:GND #PWR?
+U 1 1 5AB9BF97
+P 4350 8050
+F 0 "#PWR?" H 4350 7800 50  0001 C CNN
+F 1 "GND" H 4355 7877 50  0000 C CNN
+F 2 "" H 4350 8050 50  0001 C CNN
+F 3 "" H 4350 8050 50  0001 C CNN
+	1    4350 8050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4350 8050 4350 7950
+Connection ~ 4350 7950
+Wire Wire Line
+	4350 7950 5200 7950
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5ABA600D
+P 5200 6900
+F 0 "#PWR?" H 5200 6750 50  0001 C CNN
+F 1 "+3.3V" H 5215 7073 50  0000 C CNN
+F 2 "" H 5200 6900 50  0001 C CNN
+F 3 "" H 5200 6900 50  0001 C CNN
+	1    5200 6900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5ABA609C
+P 3550 6850
+F 0 "#PWR?" H 3550 6700 50  0001 C CNN
+F 1 "+5V" H 3565 7023 50  0000 C CNN
+F 2 "" H 3550 6850 50  0001 C CNN
+F 3 "" H 3550 6850 50  0001 C CNN
+	1    3550 6850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 6850 3550 7050
+Connection ~ 3550 7050
+Wire Wire Line
+	5200 7050 5200 6900
+Connection ~ 5200 7050
 $EndSCHEMATC
