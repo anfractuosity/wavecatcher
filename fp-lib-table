@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name LP38693MP-3.3)(type Legacy)(uri "$(KIPRJMOD)/libraries/LP38693MP-3.3.mod")(options "")(descr ""))
+  (lib (name SPH0641LU4H-1)(type Legacy)(uri "$(KIPRJMOD)/libraries/SPH0641LU4H-1.mod")(options "")(descr ""))
+)
