@@ -6,7 +6,7 @@ A number of aspects of computers emit ultrasound including SMPSs to inductors an
 
 # Fabrication
 
-I just submitted the board on 16th April to be made by https://macrofab.com/, hopefully I haven't made any mistakes!
+I just submitted the board on 16th April to have a prototype made by https://macrofab.com/, hopefully I haven't made any mistakes!
 
 # Creative Commons Licence
 
