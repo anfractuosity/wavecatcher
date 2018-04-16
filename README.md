@@ -4,6 +4,8 @@ The project will be used for acoustic cryptanalysis - "Acoustic cryptanalysis is
 
 A number of aspects of computers emit ultrasound including SMPSs to inductors and capacitors present on the computer's motherboard itself.
 
+You will likely require Kicad 5 to use the schematic/pcb layouts.
+
 # Fabrication
 
 I just submitted the board on 16th April to have a prototype made by https://macrofab.com/, hopefully I haven't made any mistakes!
