@@ -1,4 +1,9 @@
+*.elf
+*.o
+*.d
+*.map
 umic-cache.lib
 *.bak
 *.zip
+*.xml
 *.htm
