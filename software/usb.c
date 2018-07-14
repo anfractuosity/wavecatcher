@@ -32,11 +32,10 @@ static int usb_read(void)
 	if (ret){
 		printf("ERROR in bulk read: %d\n", ret);
 		return -1;
-    	} else{
-		//printf("%d receive %d bytes from device: %s\n", ++counter, nread, receiveBuf);
-		//printf("%s", receiveBuf);  //Use this for benchmarking purposes
+    } else{
+	    printf("%d bytes from device: %.*s\n",nread, nread, receiveBuf);
 		return nread;
-    	}
+    }
 }
 
 
