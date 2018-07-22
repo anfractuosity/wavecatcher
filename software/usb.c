@@ -33,7 +33,13 @@ static int usb_read(void)
 		printf("ERROR in bulk read: %d\n", ret);
 		return -1;
     } else{
-	    printf("%d bytes from device: %.*s\n",nread, nread, receiveBuf);
+	    //printf("%d bytes from device: %.*s\n",nread, nread, receiveBuf);
+        int z = 0;
+        for(;z<64;z++){
+            printf("%d ",receiveBuf[z]);
+
+        }
+
 		return nread;
     }
 }

@@ -23,6 +23,8 @@
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/stm32/spi.h>
+#include <libopencm3/stm32/common/spi_common_v2.h>
+
 
 static const struct usb_device_descriptor dev = {
 	.bLength = USB_DT_DEVICE_SIZE,
@@ -218,6 +220,7 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 
 }
 
+int z = 0;
 
 static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
 {
@@ -230,10 +233,56 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
     //sprintf(buf,"hello\n");
     //buf[7] = 0;
 
+
     memset(buf,'a',64);
-    //buf[63] = '\n';
-        //sprintf(buf,"hello\n");
+
+    uint8_t arr[10];    
+
+
+	/* Enable GPIOA clock. */
+	rcc_periph_clock_enable(RCC_GPIOA);
+
+	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT,
+			GPIO_PUPD_NONE, GPIO5);
+
+	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO6);
+
+
+    int p= 0;
+
+    for (;p<64;p++){
+int i = 0;
+	//	gpio_toggle(GPIOA, GPIO5);
+
+        gpio_set(GPIOA,GPIO5);
+
+        	for (i = 0; i < 10; i++)
+		__asm__("nop");
+
+int vv = 0;
+
+		if (gpio_get(GPIOA, GPIO6)) 
+        
+            buf[p] = 1;
+        else
+        
+            buf[p] = 0;
+
+
+		gpio_clear(GPIOA, GPIO5);
+        	for (i = 0; i < 10; i++)
+	    	__asm__("nop");
+}
+	/* Set GPIO0 (in GPIO port A) to 'input open-drain'. */
+
+    //if(z>10){
+    //    z = 0;
+    //}
+    
+    //buf[strlen(buf)+1] = 0; 
 	usbd_ep_write_packet(usbd_dev, 0x82, buf, 64);
+
+    z += 1;
 }
 
 
@@ -291,18 +340,23 @@ static void spi_setup(void)
 
 	//spi initialization;
 	spi_set_master_mode(SPI1);
-	spi_set_baudrate_prescaler(SPI1, SPI_CR1_BR_FPCLK_DIV_64);
+	spi_set_baudrate_prescaler(SPI1, SPI_CR1_BR_FPCLK_DIV_8);
 	spi_set_clock_polarity_0(SPI1);
 	spi_set_clock_phase_0(SPI1);
 	spi_set_full_duplex_mode(SPI1);
-	spi_set_unidirectional_mode(SPI1); /* bidirectional but in 3-wire */
+	spi_set_unidirectional_mode(SPI1);//*/ /* bidirectional but in 3-wire */
 	spi_set_data_size(SPI1, SPI_CR2_DS_8BIT);
 	spi_enable_software_slave_management(SPI1);
 	spi_send_msb_first(SPI1);
 	spi_set_nss_high(SPI1);
-	//spi_enable_ss_output(SPI1);
+	spi_enable_ss_output(SPI1);
 	spi_fifo_reception_threshold_8bit(SPI1);
 	SPI_I2SCFGR(SPI1) &= ~SPI_I2SCFGR_I2SMOD;
+
+
+//spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_4, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_LSBFIRST);
+
+
 	spi_enable(SPI1);
 }
 
