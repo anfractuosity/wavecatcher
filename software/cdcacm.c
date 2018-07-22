@@ -297,7 +297,7 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 static void usb_setup(void)
 {
 	/* Enable clocks for GPIO port A and USB peripheral. */
-	rcc_usb_prescale_1();
+	//rcc_usb_prescale_1();
 	rcc_periph_clock_enable(RCC_USB);
 	rcc_periph_clock_enable(RCC_GPIOA);
 
@@ -326,7 +326,7 @@ static void spi_setup(void)
 
 	//spi initialization;
 	spi_set_master_mode(SPI1);
-	spi_set_baudrate_prescaler(SPI1, SPI_CR1_BR_FPCLK_DIV_8);
+	spi_set_baudrate_prescaler(SPI1, SPI_CR1_BR_FPCLK_DIV_16);//72 / 16 = 4.5MHz
 	spi_set_clock_polarity_0(SPI1);
 	spi_set_clock_phase_0(SPI1);
 	spi_set_full_duplex_mode(SPI1);
@@ -345,17 +345,23 @@ static void spi_setup(void)
 
 const struct rcc_clock_scale this_clock_config = {
 	/* 72MHZ from 8MHZ external clock from stlink MCO */
-	.pllsrc = RCC_CFGR_PLLSRC_HSI_DIV2,
-	.pllmul = RCC_CFGR_PLLMUL_MUL12,
-	.plldiv = RCC_CFGR2_PREDIV_NODIV,
-	.usbdiv1 = false,
-	.flash_waitstates = 2,
-	.hpre = RCC_CFGR_HPRE_DIV_NONE,
-	.ppre1 = RCC_CFGR_PPRE1_DIV_2,
-	.ppre2 = RCC_CFGR_PPRE2_DIV_NONE,
-	.ahb_frequency = 48e6,
-	.apb1_frequency = 24e6,
-	.apb2_frequency = 48e6,
+
+
+
+
+		.pllsrc = RCC_CFGR_PLLSRC_HSE_PREDIV,
+		.pllmul = RCC_CFGR_PLLMUL_MUL9,
+		.plldiv = RCC_CFGR2_PREDIV_NODIV,
+		.usbdiv1 = false,
+		.flash_waitstates = 2,
+		.hpre = RCC_CFGR_HPRE_DIV_NONE,
+		.ppre1 = RCC_CFGR_PPRE1_DIV_2,
+		.ppre2 = RCC_CFGR_PPRE2_DIV_NONE,
+		.ahb_frequency = 72e6,
+		.apb1_frequency = 32e6,
+		.apb2_frequency = 72e6,
+	
+
 };
 
 
