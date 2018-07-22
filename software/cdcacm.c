@@ -226,20 +226,10 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
 {
 	(void)ep;
 	(void)usbd_dev;
-
-    
-
 	uint8_t buf[64 + 1] __attribute__ ((aligned(2)));
-    //sprintf(buf,"hello\n");
-    //buf[7] = 0;
-
-
     memset(buf,'a',64);
-
     uint8_t arr[10];    
 
-
-	/* Enable GPIOA clock. */
 	rcc_periph_clock_enable(RCC_GPIOA);
 
 	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT,
@@ -247,39 +237,28 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
 
 	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO6);
 
-
     int p= 0;
 
     for (;p<64;p++){
-int i = 0;
-	//	gpio_toggle(GPIOA, GPIO5);
 
+        int i = 0;
         gpio_set(GPIOA,GPIO5);
 
-        	for (i = 0; i < 10; i++)
-		__asm__("nop");
-
-int vv = 0;
+        for (i = 0; i < 10; i++)
+		    __asm__("nop");
 
 		if (gpio_get(GPIOA, GPIO6)) 
-        
             buf[p] = 1;
         else
         
             buf[p] = 0;
 
-
 		gpio_clear(GPIOA, GPIO5);
-        	for (i = 0; i < 10; i++)
+        	
+        for (i = 0; i < 10; i++)
 	    	__asm__("nop");
-}
-	/* Set GPIO0 (in GPIO port A) to 'input open-drain'. */
+    }
 
-    //if(z>10){
-    //    z = 0;
-    //}
-    
-    //buf[strlen(buf)+1] = 0; 
 	usbd_ep_write_packet(usbd_dev, 0x82, buf, 64);
 
     z += 1;
