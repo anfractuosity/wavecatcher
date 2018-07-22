@@ -230,16 +230,16 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
     memset(buf,'a',64);
     uint8_t arr[10];    
 
-	rcc_periph_clock_enable(RCC_GPIOA);
+	/*rcc_periph_clock_enable(RCC_GPIOA);
 
 	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT,
 			GPIO_PUPD_NONE, GPIO5);
 
-	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO6);
+	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO6);*/
 
     int p= 0;
 
-    for (;p<64;p++){
+    /*for (;p<64;p++){
 
         int i = 0;
         gpio_set(GPIOA,GPIO5);
@@ -257,7 +257,14 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
         	
         for (i = 0; i < 10; i++)
 	    	__asm__("nop");
+    }*/
+    for (;p<64;p++){
+        
+    	spi_send8(SPI1, 0xFF);
+        buf[p] = spi_read8(SPI1);
+
     }
+    
 
 	usbd_ep_write_packet(usbd_dev, 0x82, buf, 64);
 
@@ -332,15 +339,24 @@ static void spi_setup(void)
 	spi_fifo_reception_threshold_8bit(SPI1);
 	SPI_I2SCFGR(SPI1) &= ~SPI_I2SCFGR_I2SMOD;
 
-
-//spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_4, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_LSBFIRST);
-
-
 	spi_enable(SPI1);
 }
 
 
-
+const struct rcc_clock_scale this_clock_config = {
+	/* 72MHZ from 8MHZ external clock from stlink MCO */
+	.pllsrc = RCC_CFGR_PLLSRC_HSI_DIV2,
+	.pllmul = RCC_CFGR_PLLMUL_MUL12,
+	.plldiv = RCC_CFGR2_PREDIV_NODIV,
+	.usbdiv1 = false,
+	.flash_waitstates = 2,
+	.hpre = RCC_CFGR_HPRE_DIV_NONE,
+	.ppre1 = RCC_CFGR_PPRE1_DIV_2,
+	.ppre2 = RCC_CFGR_PPRE2_DIV_NONE,
+	.ahb_frequency = 48e6,
+	.apb1_frequency = 24e6,
+	.apb2_frequency = 48e6,
+};
 
 
 
@@ -349,11 +365,13 @@ int main(void)
 	int i;
 
 	usbd_device *usbd_dev;
-	//spi_setup();
+	spi_setup();
 
 
-
-	rcc_clock_setup_hsi(&rcc_hsi_8mhz[RCC_CLOCK_48MHZ]);
+	//gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11|GPIO12);
+    //gpio_set(GPIOA, GPIO12);
+	//rcc_clock_setup_hsi(&rcc_hsi_8mhz[RCC_CLOCK_48MHZ]);
+rcc_clock_setup_pll(&this_clock_config);
 	rcc_periph_clock_enable(RCC_GPIOA);
 	/*
 	 * Vile hack to reenumerate, physically _drag_ d+ low.
