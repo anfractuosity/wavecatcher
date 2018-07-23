@@ -21,6 +21,17 @@ uint8_t transferBuf[64];
 
 pthread_mutex_t lock;
 
+int countSetBits(unsigned int n)
+{
+  n = n - ((n >> 1) & 0x55555555);
+  n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
+  n = (n + (n >> 4)) & 0x0F0F0F0F;
+  n = n + (n >> 8);
+  n = n + (n >> 16);
+  return n & 0x0000003F;
+}
+ 
+FILE *x ;
 /*
  * Read a packet
  */
@@ -33,13 +44,7 @@ static int usb_read(void)
 		printf("ERROR in bulk read: %d\n", ret);
 		return -1;
     } else{
-	    //printf("%d bytes from device: %.*s\n",nread, nread, receiveBuf);
-        int z = 0;
-        for(;z<64;z++){
-            printf("%d ",receiveBuf[z]);
-
-        }
-
+        fwrite(receiveBuf,nread,1,x);
 		return nread;
     }
 }
@@ -47,24 +52,6 @@ static int usb_read(void)
 
 uint64_t bytes = 0;
 uint64_t old = 0;
-
-void bench(){
-    while(1){
-    	pthread_mutex_lock(&lock);
-        uint64_t tmp1 = bytes;
-    	pthread_mutex_unlock(&lock);
-
-        sleep(10);
-
-    	pthread_mutex_lock(&lock);
-        uint64_t tmp2 = bytes;
-        bytes = 0;
-    	pthread_mutex_unlock(&lock);
-
-        printf("%lu\n",tmp2-tmp1);fflush(stdout);
-    }
-}
-
 
 /*
  * on SIGINT: close USB interface
@@ -88,12 +75,14 @@ static void sighandler(int signum)
 
 int main(int argc, char **argv)
 {
-    	//Pass Interrupt Signal to our handler
+
+    x = fopen("dump.bin","ab");
+    //Pass Interrupt Signal to our handler
 	signal(SIGINT, sighandler);
 	libusb_init(&ctx);
 	libusb_set_debug(ctx, 3);
 
-    	//Open Device with VendorID and ProductID
+    //Open Device with VendorID and ProductID
 	handle = libusb_open_device_with_vid_pid(ctx,
 				USB_VENDOR_ID, USB_PRODUCT_ID);
 	if (!handle) {
@@ -102,6 +91,7 @@ int main(int argc, char **argv)
 	}
 
 	int r = 1;
+
 	//Claim Interface 0 from the device
 	libusb_detach_kernel_driver(handle,0);
 
@@ -110,17 +100,14 @@ int main(int argc, char **argv)
 		fprintf(stderr, "usb_claim_interface error %d\n", r);
 		return 2;
 	}
+
 	printf("Interface claimed\n");
-	pthread_t inc_x_thread;
 
-	/* create a second thread which executes inc_x(&x) */
-	if(pthread_create(&inc_x_thread, NULL, bench, NULL)) {
-   	}
-
+    unsigned long bytes = 0;
 	while (1){
-		pthread_mutex_lock(&lock);
 		bytes += usb_read();
-		pthread_mutex_unlock(&lock);
+        if (bytes >= 1024 * 1024 * 100)
+            break;
 	}
 
 	libusb_close(handle);

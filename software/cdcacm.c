@@ -220,6 +220,18 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 
 }
 
+
+// from http://cs-fundamentals.com/tech-interview/c/c-program-to-count-number-of-ones-in-unsigned-integer.php
+int countSetBits(unsigned int n)
+{
+  n = n - ((n >> 1) & 0x55555555);
+  n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
+  n = (n + (n >> 4)) & 0x0F0F0F0F;
+  n = n + (n >> 8);
+  n = n + (n >> 16);
+  return n & 0x0000003F;
+}
+
 int z = 0;
 
 static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
@@ -227,48 +239,12 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
 	(void)ep;
 	(void)usbd_dev;
 	uint8_t buf[64 + 1] __attribute__ ((aligned(2)));
-    memset(buf,'a',64);
-    uint8_t arr[10];    
-
-	/*rcc_periph_clock_enable(RCC_GPIOA);
-
-	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT,
-			GPIO_PUPD_NONE, GPIO5);
-
-	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO6);*/
-
-    int p= 0;
-
-    /*for (;p<64;p++){
-
-        int i = 0;
-        gpio_set(GPIOA,GPIO5);
-
-        for (i = 0; i < 10; i++)
-		    __asm__("nop");
-
-		if (gpio_get(GPIOA, GPIO6)) 
-            buf[p] = 1;
-        else
-        
-            buf[p] = 0;
-
-		gpio_clear(GPIOA, GPIO5);
-        	
-        for (i = 0; i < 10; i++)
-	    	__asm__("nop");
-    }*/
-    for (;p<64;p++){
-        
-    	spi_send8(SPI1, 0xFF);
-        buf[p] = spi_read8(SPI1);
-
+    for (p=0;p<64;p++){
+    	    spi_send8(SPI1, 0xFF);
+            buf[p] = spi_read8(SPI1);
     }
-    
 
-	usbd_ep_write_packet(usbd_dev, 0x82, buf, 64);
-
-    z += 1;
+	usbd_ep_write_packet(usbd_dev, 0x82, (unsigned char*)buf, 64);
 }
 
 
@@ -292,8 +268,6 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 }
 
 
-
-
 static void usb_setup(void)
 {
 	/* Enable clocks for GPIO port A and USB peripheral. */
@@ -315,9 +289,9 @@ static void spi_setup(void)
 	rcc_periph_clock_enable(RCC_GPIOE);
 
 	/* Setup GPIOE3 pin for spi mode l3gd20 select. */
-	gpio_mode_setup(GPIOE, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO3);
+	//gpio_mode_setup(GPIOE, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO3);
 	/* Start with spi communication disabled */
-	gpio_set(GPIOE, GPIO3);
+	//gpio_set(GPIOE, GPIO3);
 
 	/* Setup GPIO pins for AF5 for SPI1 signals. */
 	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE,
@@ -327,8 +301,8 @@ static void spi_setup(void)
 	//spi initialization;
 	spi_set_master_mode(SPI1);
 	spi_set_baudrate_prescaler(SPI1, SPI_CR1_BR_FPCLK_DIV_16);//72 / 16 = 4.5MHz
-	spi_set_clock_polarity_0(SPI1);
-	spi_set_clock_phase_0(SPI1);
+	spi_set_clock_polarity_1(SPI1);
+	spi_set_clock_phase_1(SPI1);
 	spi_set_full_duplex_mode(SPI1);
 	spi_set_unidirectional_mode(SPI1);//*/ /* bidirectional but in 3-wire */
 	spi_set_data_size(SPI1, SPI_CR2_DS_8BIT);
@@ -344,11 +318,6 @@ static void spi_setup(void)
 
 
 const struct rcc_clock_scale this_clock_config = {
-	/* 72MHZ from 8MHZ external clock from stlink MCO */
-
-
-
-
 		.pllsrc = RCC_CFGR_PLLSRC_HSE_PREDIV,
 		.pllmul = RCC_CFGR_PLLMUL_MUL9,
 		.plldiv = RCC_CFGR2_PREDIV_NODIV,
@@ -360,8 +329,6 @@ const struct rcc_clock_scale this_clock_config = {
 		.ahb_frequency = 72e6,
 		.apb1_frequency = 32e6,
 		.apb2_frequency = 72e6,
-	
-
 };
 
 
@@ -377,7 +344,7 @@ int main(void)
 	//gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11|GPIO12);
     //gpio_set(GPIOA, GPIO12);
 	//rcc_clock_setup_hsi(&rcc_hsi_8mhz[RCC_CLOCK_48MHZ]);
-rcc_clock_setup_pll(&this_clock_config);
+    rcc_clock_setup_pll(&this_clock_config);
 	rcc_periph_clock_enable(RCC_GPIOA);
 	/*
 	 * Vile hack to reenumerate, physically _drag_ d+ low.
