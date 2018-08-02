@@ -239,9 +239,11 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
 	(void)ep;
 	(void)usbd_dev;
 	uint8_t buf[64 + 1] __attribute__ ((aligned(2)));
+    
+    int p;
     for (p=0;p<64;p++){
-    	    spi_send8(SPI1, 0xFF);
-            buf[p] = spi_read8(SPI1);
+        spi_send8(SPI1, 0xFF);
+        buf[p] = spi_read8(SPI1);
     }
 
 	usbd_ep_write_packet(usbd_dev, 0x82, (unsigned char*)buf, 64);
