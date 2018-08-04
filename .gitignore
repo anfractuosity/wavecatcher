@@ -1,4 +1,7 @@
 wavecatcher
+*.kicad_pcb-bak
+*.bin
+*.wav
 *.elf
 *.o
 *.d

@@ -19,7 +19,7 @@
 
 OPENCM3_DIR = /home/chris/Repositories/libopencm3
 
-BINARY = cdcacm
+BINARY = firmware
 
 LDSCRIPT = stm32f3-discovery.ld
 
