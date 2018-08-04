@@ -14,6 +14,14 @@ The software is now capable of extracting audio from the PDM microphone enabling
 
 I now need to swap the simple summing PDM to PCM converter, to enable better fidelity audio.
 
-# Creative Commons Licence
+## Hardware
+
+The PCB was manufactured and assembled using Macrofab.  I plan to eventually revise the PCB at some point
+making use of line length matching of USB tracks and more curved PCB tracks.
+
+I conducted a little benchmark of the STM32F3 chip's USB performance and get roughly 6Mbps received from it on my computer. The bandwidth
+may vary a fair bit, in the order of megabits depending on your USB controller!
+
+## Creative Commons Licence
 
 Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)  
