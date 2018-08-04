@@ -24,6 +24,37 @@
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/common/spi_common_v2.h>
+#include <libopencm3/stm32/dma.h>
+#include <libopencm3/cm3/nvic.h>
+//#ifndef USE_16BIT_TRANSFERS
+///#define USE_16BIT_TRANSFERS 1
+//#endif
+
+	int counter_tx = 0;
+	int counter_rx = 0;
+unsigned char tot = 0;
+
+uint8_t tx_packet[64] = {0 };
+uint8_t rx_packet[64] = {0};
+uint8_t dx_packet[64] = {0};
+
+int transc = 2;
+int read = 0;
+/* This is for the counter state flag */
+typedef enum {
+	TX_UP_RX_HOLD = 0,
+	TX_HOLD_RX_UP,
+	TX_DOWN_RX_DOWN
+} cnt_state;
+
+/* This is a global spi state flag */
+typedef enum {
+	NONE = 0,
+	ONE,
+	DONE
+} trans_status;
+
+volatile trans_status transceive_status;
 
 
 static const struct usb_device_descriptor dev = {
@@ -239,14 +270,18 @@ static void cdcacm_data_tx_cb(usbd_device *usbd_dev, uint8_t ep)
 	(void)ep;
 	(void)usbd_dev;
 	uint8_t buf[64 + 1] __attribute__ ((aligned(2)));
-    
-    int p;
-    for (p=0;p<64;p++){
-        spi_send8(SPI1, 0xFF);
-        buf[p] = spi_read8(SPI1);
-    }
 
-	usbd_ep_write_packet(usbd_dev, 0x82, (unsigned char*)buf, 64);
+    if (read == 1)   { 
+        //memset(buf,tot,64);
+
+        memcpy(buf,dx_packet,16);
+
+        read = 0;
+    }
+    //}else 
+     //   memset(buf,0x0,64);
+    
+	usbd_ep_write_packet(usbd_dev, 0x82, (unsigned char*)buf, 16);
 }
 
 
@@ -334,6 +369,168 @@ const struct rcc_clock_scale this_clock_config = {
 };
 
 
+static void dma_int_enable(void) {
+	/* SPI1 RX on DMA1 Channel 2 */
+ 	nvic_set_priority(NVIC_DMA1_CHANNEL2_IRQ, 0);
+	nvic_enable_irq(NVIC_DMA1_CHANNEL2_IRQ);
+	/* SPI1 TX on DMA1 Channel 3 */
+	nvic_set_priority(NVIC_DMA1_CHANNEL3_IRQ, 0);
+	nvic_enable_irq(NVIC_DMA1_CHANNEL3_IRQ);
+}
+
+
+static void dma_setup(void)
+{
+	dma_int_enable();	
+}
+
+#if USE_16BIT_TRANSFERS
+static int spi_dma_transceive(uint16_t *tx_buf, int tx_len, uint16_t *rx_buf, int rx_len)
+#else
+static int spi_dma_transceive(uint8_t *tx_buf, int tx_len, uint8_t *rx_buf, int rx_len)
+#endif
+{
+	/* Check for 0 length in both tx and rx */
+	if ((rx_len < 1) && (tx_len < 1)) {
+		/* return -1 as error */
+		return -1;
+	}
+
+	/* Reset DMA channels*/
+	dma_channel_reset(DMA1, DMA_CHANNEL2);
+	dma_channel_reset(DMA1, DMA_CHANNEL3);
+
+	/* Reset SPI data and status registers.
+	 * Here we assume that the SPI peripheral is NOT
+	 * busy any longer, i.e. the last activity was verified
+	 * complete elsewhere in the program.
+	 */
+	volatile uint8_t temp_data __attribute__ ((unused));
+	while (SPI_SR(SPI1) & (SPI_SR_RXNE | SPI_SR_OVR)) {
+		temp_data = SPI_DR(SPI1);
+	}
+
+
+
+	/* Reset status flag appropriately (both 0 case caught above) */
+	transceive_status = NONE;
+	if (rx_len < 1) {
+		transceive_status = ONE;
+	}
+	if (tx_len < 1) {
+		transceive_status = ONE;
+	}
+
+
+	/* Set up rx dma, note it has higher priority to avoid overrun */
+	if (rx_len > 0) {
+
+		dma_set_peripheral_address(DMA1, DMA_CHANNEL2, (uint32_t)&SPI1_DR);
+		dma_set_memory_address(DMA1, DMA_CHANNEL2, (uint32_t)rx_buf);
+		dma_set_number_of_data(DMA1, DMA_CHANNEL2, rx_len);
+		dma_set_read_from_peripheral(DMA1, DMA_CHANNEL2);
+		dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL2);
+#if USE_16BIT_TRANSFERS
+		dma_set_peripheral_size(DMA1, DMA_CHANNEL2, DMA_CCR_PSIZE_16BIT);
+		dma_set_memory_size(DMA1, DMA_CHANNEL2, DMA_CCR_MSIZE_16BIT);
+#else
+		dma_set_peripheral_size(DMA1, DMA_CHANNEL2, DMA_CCR_PSIZE_8BIT);
+		dma_set_memory_size(DMA1, DMA_CHANNEL2, DMA_CCR_MSIZE_8BIT);
+#endif
+		dma_set_priority(DMA1, DMA_CHANNEL2, DMA_CCR_PL_VERY_HIGH);
+	}
+
+	/* Set up tx dma */
+	if (tx_len > 0) {
+		dma_set_peripheral_address(DMA1, DMA_CHANNEL3, (uint32_t)&SPI1_DR);
+		dma_set_memory_address(DMA1, DMA_CHANNEL3, (uint32_t)tx_buf);
+		dma_set_number_of_data(DMA1, DMA_CHANNEL3, tx_len);
+		dma_set_read_from_memory(DMA1, DMA_CHANNEL3);
+		dma_enable_memory_increment_mode(DMA1, DMA_CHANNEL3);
+#if USE_16BIT_TRANSFERS
+		dma_set_peripheral_size(DMA1, DMA_CHANNEL3, DMA_CCR_PSIZE_16BIT);
+		dma_set_memory_size(DMA1, DMA_CHANNEL3, DMA_CCR_MSIZE_16BIT);
+#else
+		dma_set_peripheral_size(DMA1, DMA_CHANNEL3, DMA_CCR_PSIZE_8BIT);
+		dma_set_memory_size(DMA1, DMA_CHANNEL3, DMA_CCR_MSIZE_8BIT);
+#endif
+		dma_set_priority(DMA1, DMA_CHANNEL3, DMA_CCR_PL_HIGH);
+	}
+
+
+
+
+	/* Enable dma transfer complete interrupts */
+	if (rx_len > 0) {
+
+		dma_enable_transfer_complete_interrupt(DMA1, DMA_CHANNEL2);
+	}
+	if (tx_len > 0) {
+		dma_enable_transfer_complete_interrupt(DMA1, DMA_CHANNEL3);
+	}
+
+	/* Activate dma channels */
+	if (rx_len > 0) {
+		dma_enable_channel(DMA1, DMA_CHANNEL2);
+	}
+	if (tx_len > 0) {
+		dma_enable_channel(DMA1, DMA_CHANNEL3);
+	}
+
+	/* Enable the spi transfer via dma
+	 * This will immediately start the transmission,
+	 * after which when the receive is complete, the
+	 * receive dma will activate
+	 */
+	if (rx_len > 0) {
+
+    	spi_enable_rx_dma(SPI1);
+    }
+    if (tx_len > 0) {
+    	spi_enable_tx_dma(SPI1);
+    }
+
+    return 1;
+}
+
+
+
+/* SPI receive completed with DMA */
+void dma1_channel2_isr(void)
+{
+	if ((DMA1_ISR &DMA_ISR_TCIF2) != 0) {
+		DMA1_IFCR |= DMA_IFCR_CTCIF2;
+	}
+
+	dma_disable_transfer_complete_interrupt(DMA1, DMA_CHANNEL2);
+	spi_disable_rx_dma(SPI1);
+	dma_disable_channel(DMA1, DMA_CHANNEL2);
+
+    memcpy(dx_packet,rx_packet,64);
+    read = 1;
+
+    transc++;
+    
+}
+
+/* SPI transmit completed with DMA */
+void dma1_channel3_isr(void)
+{
+	if ((DMA1_ISR &DMA_ISR_TCIF3) != 0) {
+		DMA1_IFCR |= DMA_IFCR_CTCIF3;
+	}
+
+	dma_disable_transfer_complete_interrupt(DMA1, DMA_CHANNEL3);
+	spi_disable_tx_dma(SPI1);
+	dma_disable_channel(DMA1, DMA_CHANNEL3);
+    transc++;
+}
+
+
+
+
+
+
 
 int main(void)
 {
@@ -341,6 +538,7 @@ int main(void)
 
 	usbd_device *usbd_dev;
 	spi_setup();
+	dma_setup();
 
 
 	//gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11|GPIO12);
@@ -348,6 +546,13 @@ int main(void)
 	//rcc_clock_setup_hsi(&rcc_hsi_8mhz[RCC_CLOCK_48MHZ]);
     rcc_clock_setup_pll(&this_clock_config);
 	rcc_periph_clock_enable(RCC_GPIOA);
+
+	/* Enable SPI1 Periph and gpio clocks */
+	rcc_periph_clock_enable(RCC_SPI1);
+
+	/* Enable DMA1 clock */
+    rcc_periph_clock_enable(RCC_DMA1);
+
 	/*
 	 * Vile hack to reenumerate, physically _drag_ d+ low.
 	 * do NOT do this if you're board has proper usb pull up control!
@@ -370,8 +575,17 @@ int main(void)
 
 	int ok = 1;
 
-
+    
+    
+    int c = 0;
 	while (1){
+
+
+		if (transc == 2 && spi_dma_transceive(tx_packet,16, rx_packet, 16)) {
+            transc = 0;
+            //tot ++;
+		}
+
 
 		usbd_poll(usbd_dev);
 

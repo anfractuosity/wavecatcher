@@ -105,9 +105,7 @@ int main(int argc, char **argv)
 
     unsigned long bytes = 0;
 	while (1){
-		bytes += usb_read();
-        if (bytes >= 1024 * 1024 * 100)
-            break;
+	    usb_read();
 	}
 
 	libusb_close(handle);
