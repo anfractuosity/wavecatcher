@@ -23,10 +23,6 @@
 
 #define READ 64 
 
-int counter_tx = 0;
-int counter_rx = 0;
-unsigned char tot = 0;
-
 uint8_t tx_packet[64] = { 0 };
 uint8_t rx_packet[64] = { 0 };
 uint8_t dx_packet[64] = { 0 };
@@ -289,8 +285,6 @@ static void cdcacm_data_rx_cb(usbd_device * usbd_dev, uint8_t ep) {
     }
 
 }
-
-int z = 0;
 
 static void cdcacm_data_tx_cb(usbd_device * usbd_dev, uint8_t ep) {
     (void)ep;
