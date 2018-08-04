@@ -6,9 +6,11 @@ A number of aspects of computers emit ultrasound including SMPSs to inductors an
 
 You will likely require Kicad 5 to use the schematic/pcb layouts.
 
-# Fabrication
+## Software
 
-I just submitted the board on 16th April to have a prototype made by https://macrofab.com/, hopefully I haven't made any mistakes!
+The software is now capable of extracting audio from the PDM microphone enabling playing of the audio with SoX.
+
+I now need to swap the simple summing PDM to PCM converter, to enable better fidelity audio.
 
 # Creative Commons Licence
 
