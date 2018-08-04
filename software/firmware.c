@@ -21,6 +21,8 @@
 ///#define USE_16BIT_TRANSFERS 1
 //#endif
 
+#define READ 64 
+
 int counter_tx = 0;
 int counter_rx = 0;
 unsigned char tot = 0;
@@ -296,10 +298,10 @@ static void cdcacm_data_tx_cb(usbd_device * usbd_dev, uint8_t ep) {
     uint8_t buf[64 + 1] __attribute__ ((aligned(2)));
 
     if (read == 1) {
-        memcpy(buf, dx_packet, 16);
+        memcpy(buf, dx_packet, READ);
         read = 0;
     }
-    usbd_ep_write_packet(usbd_dev, 0x82, (unsigned char *)buf, 16);
+    usbd_ep_write_packet(usbd_dev, 0x82, (unsigned char *)buf, READ);
 }
 
 static void cdcacm_set_config(usbd_device * usbd_dev, uint16_t wValue) {
@@ -497,7 +499,7 @@ void dma1_channel2_isr(void) {
     spi_disable_rx_dma(SPI1);
     dma_disable_channel(DMA1, DMA_CHANNEL2);
 
-    memcpy(dx_packet, rx_packet, 64);
+    memcpy(dx_packet, rx_packet, READ);
     read = 1;
 
     transc++;
@@ -552,7 +554,7 @@ int main(void) {
 
     while (1) {
 
-        if (transc == 2 && spi_dma_transceive(tx_packet, 16, rx_packet, 16)) {
+        if (transc == 2 && spi_dma_transceive(tx_packet, READ, rx_packet, READ)) {
             transc = 0;
         }
 
