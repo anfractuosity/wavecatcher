@@ -16,3 +16,9 @@ sudo ./wavecatcher
 ./process
 sox -r 22000 -c 1 -b 8 -t raw -e unsigned-integer out.bin 1.wav
 ```
+
+# Todo
+
+Convert PDM to PCM in a more intelligent fashion!
+
+
