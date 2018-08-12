@@ -10,7 +10,12 @@ int countSetBits(unsigned int n) {
     return n & 0x0000003F;
 }
 
-int processA() {
+// This should be replaced with moving average filter
+//
+// play output using something like:
+//
+// sox -r 20000 -c 1 -b 8 -t raw -e unsigned-integer out.bin 1.wav
+int process() {
 
     int i = 0;
 
@@ -35,44 +40,6 @@ int processA() {
 
 }
 
-int processB() {
-
-
-    FILE *o = fopen("out.bin", "ab");
-    FILE *f = fopen("dump.bin", "rb");
-
-    fseek(f, 0L, SEEK_END);
-    int sz = ftell(f);
-    rewind(f);
-
-    char *buf = malloc(sz);
-    fread(buf, 1, sz, f);
-    
-    int i = 0;
-
-    int mx = 100;
-
-    for(i=0;i<sz-mx;i+=mx/4){
-        int c = 0;
-        int max = mx / 4;
-        int sum = 0;
-
-        char *b = buf+i;
-        for (c = 0; c < max; c++) {
-            int val = ((int *)b)[c];
-            sum += countSetBits(val);
-        }
-
-        unsigned short tmp = sum*200;
-        printf("sum %d\n",tmp);
-        fwrite(&tmp, 2, 1, o);
-    }
-
-}
-
-
 int main(){
-
-    //processA();
-    processA();
+    process();
 }
